@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  },
+ "scripts": {
+  "start": "node app.js",
+  "test": "jest"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
     "jest": "^30.3.0"
   }
 }
