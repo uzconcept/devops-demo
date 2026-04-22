@@ -4,9 +4,14 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hello from version 2 Super excited to do DEVOPS, Thank you Chatgpt 🚀");
+//app.get("/", (req, res) => {
+ // res.send("Hello from version 2 Super excited to do DEVOPS, Thank you Chatgpt 🚀");
+//});
+
+app.get("/error", (req, res) => {
+  throw new Error("Simulated server crash");
 });
+
 app.post("/message", (req, res) => {
   const { text } = req.body;
 
@@ -35,3 +40,11 @@ if (require.main === module) {
 
 };
 module.exports = app;
+
+app.use((err, req, res, next) => {
+  console.error(err.message);
+
+  res.status(500).json({
+    error: "Internal Server Error",
+  });
+});
