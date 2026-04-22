@@ -1,8 +1,8 @@
 const request = require("supertest");
 const app = require("./app");
 
-// ✅ Test 1
-test("POST /message should return the same message", async () => {
+// ✅ Valid input
+test("POST /message should return message when valid", async () => {
   const response = await request(app)
     .post("/message")
     .send({ text: "Hello DevOps" });
@@ -11,12 +11,32 @@ test("POST /message should return the same message", async () => {
   expect(response.body).toEqual({ message: "Hello DevOps" });
 });
 
-// ✅ Test 2 (separate, NOT nested)
-test("POST /message should fail if no text provided", async () => {
+// ❌ Missing field
+test("POST /message should fail if text is missing", async () => {
   const response = await request(app)
     .post("/message")
     .send({});
 
   expect(response.statusCode).toBe(400);
   expect(response.body).toEqual({ error: "Text is required" });
+});
+
+// ❌ Wrong type
+test("POST /message should fail if text is not a string", async () => {
+  const response = await request(app)
+    .post("/message")
+    .send({ text: 123 });
+
+  expect(response.statusCode).toBe(400);
+  expect(response.body).toEqual({ error: "Text must be a string" });
+});
+
+// ❌ Empty string
+test("POST /message should fail if text is empty", async () => {
+  const response = await request(app)
+    .post("/message")
+    .send({ text: "   " });
+
+  expect(response.statusCode).toBe(400);
+  expect(response.body).toEqual({ error: "Text cannot be empty" });
 });
