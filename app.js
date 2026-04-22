@@ -7,6 +7,10 @@ app.get("/", (req, res) => {
   res.send("Hello from version 2 Super excited to do DEVOPS, Thank you Chatgpt 🚀");
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, ()=> {
+    console.log(`Server running on port ${port}`);
+  });
+
+};
+module.exports = app;
