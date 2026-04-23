@@ -15,9 +15,8 @@ test("GET /error should return 500", async () => {
   const response = await request(app).get("/error");
 
   expect(response.statusCode).toBe(500);
-  expect(response.body).toEqual({
-    error: "Internal Server Error",
-  });
+ expect(response.body.error).toBe("Internal Server Error");
+expect(response.body.requestId).toBeDefined();
 });
 // ❌ Missing field
 test("POST /message should fail if text is missing", async () => {

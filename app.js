@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require("uuid");
+const logger = require("./logger");
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -7,6 +9,20 @@ const port = process.env.PORT || 3000;
 //app.get("/", (req, res) => {
  // res.send("Hello from version 2 Super excited to do DEVOPS, Thank you Chatgpt 🚀");
 //});
+
+app.use((req, res, next) => {
+  const requestId = uuidv4();
+  req.id = requestId;
+
+  logger.info({
+    message: "Incoming request",
+    requestId,
+    method: req.method,
+    url: req.url,
+  });
+
+  next();
+});
 
 app.get("/error", (req, res) => {
   throw new Error("Simulated server crash");
@@ -42,9 +58,15 @@ if (require.main === module) {
 module.exports = app;
 
 app.use((err, req, res, next) => {
-  console.error(err.message);
+  logger.error({
+    message: "Unhandled error",
+    requestId: req.id,
+    error: err.message,
+    stack: err.stack,
+  });
 
   res.status(500).json({
     error: "Internal Server Error",
- });
+    requestId: req.id, // useful for debugging
+  });
 });
